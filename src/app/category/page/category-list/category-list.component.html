@@ -1,5 +1,60 @@
+<!-- ------ -->
+<!-- Header -->
+<!-- ------ -->
 <ion-header>
   <ion-toolbar>
+    <ion-buttons slot="start">
+      <ion-menu-button/>
+    </ion-buttons>
     <ion-title>Categories</ion-title>
   </ion-toolbar>
+</ion-header>
+<!-- ------- -->
+<!-- Content -->
+<!-- ------- -->
+<ion-content>
+  <ion-grid [fixed]="true">
+    <!-- Search & Sort -->
+    <ion-row>
+      <ion-col size="12" size-sm="6">
+        <ion-item>
+          <ion-icon name="swap-vertical" slot="start"></ion-icon>
+          <ion-select interface="popover" placeholder="Name (A-Z)">
+            <ion-select-option value="Created at (newest first)">Created at (newest first)</ion-select-option>
+            <ion-select-option value="Created at (oldest first)">Created at (oldest first)</ion-select-option>
+            <ion-select-option value="Name (A-Z)">Name (A-Z)</ion-select-option>
+            <ion-select-option value="Name (Z-A)">Name (Z-A)</ion-select-option>
+          </ion-select>
+        </ion-item>
+      </ion-col>
+      <ion-col size="12" size-sm="6">
+        <ion-item>
+          <ion-icon class="md" name="search" slot="start" role="img"></ion-icon>
+          <ion-input maxlength="40" placeholder="Search" [clearInput]="true"/>
+        </ion-item>
+      </ion-col>
+    </ion-row>
 
+    <!-- Category List -->
+    <ion-row>
+      <ion-col>
+        <ion-item button="true" [detail]="true" (click)="openModal()">
+          <ion-label> Auswärts Essen</ion-label>
+        </ion-item>
+        <ion-item button="true" [detail]="true" (click)="openModal()">
+          <ion-label> Ferien</ion-label>
+        </ion-item>
+        <ion-item button="true" [detail]="true" (click)="openModal()">
+          <ion-label> Sport</ion-label>
+        </ion-item>
+      </ion-col>
+    </ion-row>
+  </ion-grid>
+
+  <!-- Create Button -->
+  <ion-fab slot="fixed" vertical="bottom" horizontal="end">
+    <ion-fab-button class="md ion-activatable ion-focusable">
+      <ion-icon name="add" role="img" class="md"></ion-icon>
+    </ion-fab-button>
+  </ion-fab>
+</ion-content>

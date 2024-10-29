@@ -1,6 +1,7 @@
 import { Component, inject } from '@angular/core';
 import {
   IonButtons,
+  IonSearchbar,
   IonCol,
   IonContent,
   IonFab,
@@ -13,6 +14,7 @@ import {
   IonInput,
   IonItem,
   IonLabel,
+  IonList,
   IonMenuButton,
   IonProgressBar,
   IonRefresher,
@@ -39,6 +41,7 @@ import CategoryModalComponent from '../../component/category-modal/category-moda
 
     // Ionic
     IonHeader,
+    IonSearchbar,
     IonToolbar,
     IonButtons,
     IonMenuButton,
@@ -60,7 +63,8 @@ import CategoryModalComponent from '../../component/category-modal/category-moda
     IonInfiniteScroll,
     IonInfiniteScrollContent,
     IonFab,
-    IonFabButton
+    IonFabButton,
+    IonList
   ]
 })
 export default class CategoryListComponent {
