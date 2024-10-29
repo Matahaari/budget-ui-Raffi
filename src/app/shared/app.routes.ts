@@ -14,7 +14,8 @@ const appRoutes: Routes = [
   },
   {
     path: categoriesPath,
-    loadChildren: () => import('../category/category.routes')
+    loadChildren: () => import('../category/category.routes'),
+    canActivate: [authGuard]
   },
   {
     path: expensesPath,
@@ -23,11 +24,6 @@ const appRoutes: Routes = [
   {
     path: loginPath,
     loadComponent: () => import('./component/login/login.component')
-  },
-  {
-    path: categoriesPath,
-    loadChildren: () => import('../category/category.routes'),
-    canActivate: [authGuard]
   },
   {
     path: expensesPath,
