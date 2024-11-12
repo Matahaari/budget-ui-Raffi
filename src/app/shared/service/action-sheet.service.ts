@@ -1,7 +1,7 @@
 import { inject, Injectable } from '@angular/core';
 import { ActionSheetController, ActionSheetOptions } from '@ionic/angular/standalone';
 import { filter, from, Observable } from 'rxjs';
-import { close, trash } from 'ionicons/icons';
+import { close, refresh, trash } from 'ionicons/icons';
 import { addIcons } from 'ionicons';
 
 @Injectable({ providedIn: 'root' })
@@ -9,7 +9,7 @@ export class ActionSheetService {
   private readonly actionSheetCtrl = inject(ActionSheetController);
 
   constructor() {
-    addIcons({ close, trash });
+    addIcons({ close, trash, refresh });
   }
 
   showDeletionConfirmation = (message: string): Observable<void> =>
@@ -39,4 +39,16 @@ export class ActionSheetService {
         })
         .then(({ data }) => data?.action)
     ).pipe(filter(action => action === actionRole));
+  showUpdateConfirmation = (): Observable<void> =>
+    this.showActionSheet(
+      {
+        header: 'Update Available',
+        subHeader: 'An update is available for installation. Would you like to update now? Unsaved changes will be lost!',
+        buttons: [
+          { text: 'Update', data: { action: 'update' }, icon: 'refresh' },
+          { text: 'Cancel', role: 'cancel', data: { action: 'cancel' }, icon: 'close' }
+        ]
+      },
+      'update'
+    );
 }

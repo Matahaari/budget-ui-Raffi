@@ -26,6 +26,7 @@ import {
   IonToolbar
 } from '@ionic/angular/standalone';
 import { AuthService } from './shared/service/auth.service';
+import { UpdateService } from './shared/service/update.service';
 
 @Component({
   selector: 'app-root',
@@ -68,5 +69,6 @@ export default class AppComponent {
   constructor() {
     // Add all used Ionic icons
     addIcons({ analytics, logOut, podium, pricetag });
+    inject(UpdateService); // Reference UpdateService here as it won't be created otherwise
   }
 }
