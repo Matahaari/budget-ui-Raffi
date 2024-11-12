@@ -41,6 +41,12 @@ import { close, save, text, trash } from 'ionicons/icons';
 export default class CategoryModalComponent {
   // DI
   private readonly modalCtrl = inject(ModalController);
+  private readonly actionSheetService = inject(ActionSheetService);
+  private readonly categoryService = inject(CategoryService);
+  private readonly formBuilder = inject(FormBuilder);
+  private readonly loadingIndicatorService = inject(LoadingIndicatorService);
+  private readonly modalCtrl = inject(ModalController);
+  private readonly toastService = inject(ToastService);
 
   constructor() {
     // Add all used Ionic icons
