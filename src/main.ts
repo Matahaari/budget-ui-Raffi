@@ -26,6 +26,7 @@ bootstrapApplication(AppComponent, {
     { provide: RouteReuseStrategy, useClass: IonicRouteStrategy },
     { provide: TitleStrategy, useClass: PageTitleStrategy },
     provideIonicAngular(),
+    provideHttpClient(),
     provideRouter(appRoutes, withPreloading(PreloadAllModules)),
     provideHttpClient(withInterceptors([authInterceptor]))
   ]
