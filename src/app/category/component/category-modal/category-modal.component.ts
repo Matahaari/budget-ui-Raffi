@@ -13,9 +13,12 @@ import {
   IonToolbar,
   ModalController
 } from '@ionic/angular/standalone';
-import { ReactiveFormsModule } from '@angular/forms';
+import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { addIcons } from 'ionicons';
 import { close, save, text, trash } from 'ionicons/icons';
+import { LoadingIndicatorService } from '../../../shared/service/loading-indicator.service';
+import { CategoryService } from '../../service/category.service';
+import { ToastService } from '../../../shared/service/toast.service';
 
 @Component({
   selector: 'app-category-modal',
@@ -41,12 +44,15 @@ import { close, save, text, trash } from 'ionicons/icons';
 export default class CategoryModalComponent {
   // DI
   private readonly modalCtrl = inject(ModalController);
-  private readonly actionSheetService = inject(ActionSheetService);
   private readonly categoryService = inject(CategoryService);
   private readonly formBuilder = inject(FormBuilder);
   private readonly loadingIndicatorService = inject(LoadingIndicatorService);
-  private readonly modalCtrl = inject(ModalController);
   private readonly toastService = inject(ToastService);
+
+  readonly categoryForm = this.formBuilder.group({
+    id: [null! as string], // hidden
+    name: ['', [Validators.required, Validators.maxLength(40)]]
+  });
 
   constructor() {
     // Add all used Ionic icons
