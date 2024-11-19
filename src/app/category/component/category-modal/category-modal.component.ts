@@ -1,4 +1,4 @@
-import { Component, inject, ViewChild } from '@angular/core';
+import { Component, inject, Input, ViewChild } from '@angular/core';
 import {
   IonButton,
   IonButtons,
@@ -20,8 +20,9 @@ import { close, save, text, trash } from 'ionicons/icons';
 import { LoadingIndicatorService } from '../../../shared/service/loading-indicator.service';
 import { CategoryService } from '../../service/category.service';
 import { ToastService } from '../../../shared/service/toast.service';
-import { CategoryUpsertDto } from '../../../shared/domain';
+import { Category, CategoryUpsertDto } from '../../../shared/domain';
 import { finalize } from 'rxjs';
+import { ActionSheetService } from '../../../shared/service/action-sheet.service';
 
 @Component({
   selector: 'app-category-modal',
@@ -45,7 +46,10 @@ import { finalize } from 'rxjs';
   ]
 })
 export default class CategoryModalComponent implements ViewDidEnter {
+  // Passed into the component by the ModalController, available in the ionViewWillEnter
+  @Input() category: Category = {} as Category;
   // DI
+  private readonly actionSheetService = inject(ActionSheetService);
   private readonly modalCtrl = inject(ModalController);
   private readonly categoryService = inject(CategoryService);
   private readonly formBuilder = inject(FormBuilder);

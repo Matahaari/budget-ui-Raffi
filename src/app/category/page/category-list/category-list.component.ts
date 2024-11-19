@@ -120,8 +120,11 @@ export default class CategoryListComponent implements ViewDidEnter, ViewDidLeave
       });
   }
 
-  async openModal(): Promise<void> {
-    const modal = await this.modalCtrl.create({ component: CategoryModalComponent });
+  async openModal(category?: Category): Promise<void> {
+    const modal = await this.modalCtrl.create({
+      component: CategoryModalComponent,
+      componentProps: { category: category ?? {} }
+    });
     modal.present();
     const { role } = await modal.onWillDismiss();
     if (role === 'refresh') this.reloadCategories();
