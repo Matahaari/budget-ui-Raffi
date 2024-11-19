@@ -99,6 +99,41 @@ export default class CategoryListComponent implements ViewDidEnter, ViewDidLeave
     addIcons({ swapVertical, search, alertCircleOutline, add });
   }
 
+  async openModal(category?: Category): Promise<void> {
+    const modal = await this.modalCtrl.create({
+      component: CategoryModalComponent,
+      componentProps: { category: category ?? {} }
+    });
+    modal.present();
+    const { role } = await modal.onWillDismiss();
+    if (role === 'refresh') this.reloadCategories();
+  }
+
+  ionViewDidEnter(): void {
+    this.loadCategories();
+    this.searchFormSubscription = this.searchForm.valueChanges
+      .pipe(debounce(searchParams => interval(searchParams.name?.length ? 400 : 0)))
+      .subscribe(searchParams => {
+        this.searchCriteria = { ...this.searchCriteria, ...searchParams, page: 0 };
+        this.loadCategories();
+      });
+  }
+
+  ionViewDidLeave(): void {
+    this.searchFormSubscription?.unsubscribe();
+    this.searchFormSubscription = undefined;
+  }
+
+  loadNextCategoryPage($event: InfiniteScrollCustomEvent) {
+    this.searchCriteria.page++;
+    this.loadCategories(() => $event.target.complete());
+  }
+
+  reloadCategories($event?: RefresherCustomEvent): void {
+    this.searchCriteria.page = 0;
+    this.loadCategories(() => $event?.target.complete());
+  }
+
   private loadCategories(next?: () => void): void {
     if (!this.searchCriteria.name) delete this.searchCriteria.name;
     this.loading = true;
@@ -118,37 +153,5 @@ export default class CategoryListComponent implements ViewDidEnter, ViewDidLeave
         },
         error: error => this.toastService.displayWarningToast('Could not load categories', error)
       });
-  }
-
-  async openModal(category?: Category): Promise<void> {
-    const modal = await this.modalCtrl.create({
-      component: CategoryModalComponent,
-      componentProps: { category: category ?? {} }
-    });
-    modal.present();
-    const { role } = await modal.onWillDismiss();
-    if (role === 'refresh') this.reloadCategories();
-  }
-
-  ionViewDidEnter(): void {
-    this.searchFormSubscription = this.searchForm.valueChanges
-      .pipe(debounce(searchParams => interval(searchParams.name?.length ? 400 : 0)))
-      .subscribe(searchParams => {
-        this.searchCriteria = { ...this.searchCriteria, ...searchParams, page: 0 };
-        this.loadCategories();
-      });
-  }
-  ionViewDidLeave(): void {
-    this.searchFormSubscription?.unsubscribe();
-    this.searchFormSubscription = undefined;
-  }
-  loadNextCategoryPage($event: InfiniteScrollCustomEvent) {
-    this.searchCriteria.page++;
-    this.loadCategories(() => $event.target.complete());
-  }
-
-  reloadCategories($event?: RefresherCustomEvent): void {
-    this.searchCriteria.page = 0;
-    this.loadCategories(() => $event?.target.complete());
   }
 }
