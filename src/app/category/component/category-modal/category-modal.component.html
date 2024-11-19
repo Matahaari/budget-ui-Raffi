@@ -1,12 +1,12 @@
 <ion-content class="ion-padding" [formGroup]="categoryForm">
   <ion-item>
-    <ion-icon name="text" slot="start" />
-    <ion-input #nameInput formControlName="name" maxlength="40" placeholder="Name" required="true" />
-
     <ion-button (click)="save()" [disabled]="categoryForm.pristine || categoryForm.invalid">
       <ion-icon slot="start" name="save" />
       Save
     </ion-button>
-
+  </ion-item>
+  <ion-item>
+    <ion-icon name="text" slot="start"/>
+    <ion-input #nameInput formControlName="name" maxlength="40" placeholder="Name" required="true"/>
   </ion-item>
 </ion-content>

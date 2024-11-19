@@ -85,6 +85,7 @@ export default class CategoryModalComponent implements ViewDidEnter {
   ionViewDidEnter(): void {
     this.nameInput?.setFocus();
   }
+
   delete(): void {
     this.modalCtrl.dismiss(null, 'delete');
   }
