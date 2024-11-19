@@ -28,14 +28,14 @@ import {
   ModalController,
   ViewDidEnter
 } from '@ionic/angular/standalone';
-import { ReactiveFormsModule } from '@angular/forms';
+import { NonNullableFormBuilder, ReactiveFormsModule } from '@angular/forms';
 import { addIcons } from 'ionicons';
 import { add, alertCircleOutline, search, swapVertical } from 'ionicons/icons';
 import CategoryModalComponent from '../../component/category-modal/category-modal.component';
 import { ToastService } from '../../../shared/service/toast.service';
 import { CategoryService } from '../../service/category.service';
-import { Category, CategoryCriteria } from '../../../shared/domain';
-import { finalize } from 'rxjs';
+import { Category, CategoryCriteria, SortOption } from '../../../shared/domain';
+import { finalize, Subscription } from 'rxjs';
 import { InfiniteScrollCustomEvent, RefresherCustomEvent } from '@ionic/angular';
 
 @Component({
@@ -78,11 +78,19 @@ export default class CategoryListComponent implements ViewDidEnter {
   private readonly categoryService = inject(CategoryService);
   private readonly modalCtrl = inject(ModalController);
   private readonly toastService = inject(ToastService);
+  private readonly formBuilder = inject(NonNullableFormBuilder);
   categories: Category[] | null = null;
   readonly initialSort = 'name,asc';
   lastPageReached = false;
   loading = false;
   searchCriteria: CategoryCriteria = { page: 0, size: 25, sort: this.initialSort };
+  private searchFormSubscription?: Subscription;
+  readonly sortOptions: SortOption[] = [
+    { label: 'Created at (newest first)', value: 'createdAt,desc' },
+    { label: 'Created at (oldest first)', value: 'createdAt,asc' },
+    { label: 'Name (A-Z)', value: 'name,asc' },
+    { label: 'Name (Z-A)', value: 'name,desc' }
+  ];
 
   constructor() {
     // Add all used Ionic icons
