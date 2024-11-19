@@ -36,6 +36,7 @@ import { ToastService } from '../../../shared/service/toast.service';
 import { CategoryService } from '../../service/category.service';
 import { Category, CategoryCriteria } from '../../../shared/domain';
 import { finalize } from 'rxjs';
+import { InfiniteScrollCustomEvent } from '@ionic/angular';
 
 @Component({
   selector: 'app-category-list',
@@ -118,5 +119,10 @@ export default class CategoryListComponent implements ViewDidEnter {
 
   ionViewDidEnter(): void {
     this.loadCategories();
+  }
+
+  loadNextCategoryPage($event: InfiniteScrollCustomEvent) {
+    this.searchCriteria.page++;
+    this.loadCategories(() => $event.target.complete());
   }
 }
