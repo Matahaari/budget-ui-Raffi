@@ -22,11 +22,12 @@
       <ion-col size="12" size-sm="6">
         <ion-item>
           <ion-icon name="swap-vertical" slot="start"></ion-icon>
-          <ion-select interface="popover" placeholder="Name (A-Z)">
-            <ion-select-option value="Created at (newest first)">Created at (newest first)</ion-select-option>
-            <ion-select-option value="Created at (oldest first)">Created at (oldest first)</ion-select-option>
-            <ion-select-option value="Name (A-Z)">Name (A-Z)</ion-select-option>
-            <ion-select-option value="Name (Z-A)">Name (Z-A)</ion-select-option>
+          <ion-select interface="popover" formControlName="sort">
+            @for (sortOption of sortOptions; track sortOption.label) {
+              <ion-select-option [value]="sortOption.value">
+                {{ sortOption.label }}
+              </ion-select-option>
+            }
           </ion-select>
         </ion-item>
       </ion-col>
