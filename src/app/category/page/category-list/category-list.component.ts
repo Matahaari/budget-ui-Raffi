@@ -34,6 +34,7 @@ import CategoryModalComponent from '../../component/category-modal/category-moda
 import { ToastService } from '../../../shared/service/toast.service';
 import { CategoryService } from '../../service/category.service';
 import { Category, CategoryCriteria } from '../../../shared/domain';
+import { finalize } from 'rxjs';
 
 @Component({
   selector: 'app-category-list',
@@ -85,7 +86,26 @@ export default class CategoryListComponent {
     // Add all used Ionic icons
     addIcons({ swapVertical, search, alertCircleOutline, add });
   }
-
+  private loadCategories(next?: () => void): void {
+    if (!this.searchCriteria.name) delete this.searchCriteria.name;
+    this.loading = true;
+    this.categoryService
+      .getCategories(this.searchCriteria)
+      .pipe(
+        finalize(() => {
+          this.loading = false;
+          if (next) next();
+        })
+      )
+      .subscribe({
+        next: categories => {
+          if (this.searchCriteria.page === 0 || !this.categories) this.categories = [];
+          this.categories.push(...categories.content);
+          this.lastPageReached = categories.last;
+        },
+        error: error => this.toastService.displayWarningToast('Could not load categories', error)
+      });
+  }
   async openModal(): Promise<void> {
     const modal = await this.modalCtrl.create({ component: CategoryModalComponent });
     modal.present();
