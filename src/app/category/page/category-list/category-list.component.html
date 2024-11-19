@@ -79,6 +79,11 @@
     <ion-infinite-scroll-content />
   </ion-infinite-scroll>
 
+  <!-- Refresher -->
+  <ion-refresher slot="fixed" (ionRefresh)="reloadCategories($event)" [disabled]="loading">
+    <ion-refresher-content />
+  </ion-refresher>
+
   <!-- Create Button -->
   <ion-fab slot="fixed" vertical="bottom" horizontal="end">
     <ion-fab-button class="md ion-activatable ion-focusable">
