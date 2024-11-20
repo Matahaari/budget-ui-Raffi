@@ -1,1 +1,62 @@
-Expense Modal
+<!-- ------ -->
+<!-- Header -->
+<!-- ------ -->
+<ion-header>
+  <ion-toolbar>
+
+    <!-- Cancel Button -->
+    <ion-buttons slot="start">
+      <ion-button color="medium" (click)="cancel()">
+        <ion-icon slot="start" name="close" />
+        Cancel
+      </ion-button>
+    </ion-buttons>
+
+    <!-- Title -->
+    <ion-title>Add Expense</ion-title>
+
+    <!-- Save Button -->
+    <ion-buttons slot="end">
+      <ion-button (click)="save()">
+        <ion-icon slot="start" name="save" />
+      </ion-button>
+    </ion-buttons>
+  </ion-toolbar>
+</ion-header>
+
+<!-- ------- -->
+<!-- Content -->
+<!-- ------- -->
+<ion-content class="ion-padding">
+  <!-- Input -->
+  <ion-item>
+    <ion-icon name="text" slot="start" role="img" class="md"></ion-icon>
+    <ion-input maxlength="40" placeholder="Name" required="" formcontrolname="name" autofocus="true" />
+  </ion-item>
+  <ion-item>
+    <ion-icon name="pricetag" slot="start" role="img" class="md"></ion-icon>
+    <ion-select placeholder="Category" interface="popover">
+      <ion-select-option> test1</ion-select-option>
+      <ion-select-option> test2</ion-select-option>
+      <ion-select-option> test3</ion-select-option>
+    </ion-select>
+    <ion-button slot="end">
+      <ion-icon slot="icon-only" name="add" role="img"></ion-icon>
+    </ion-button>
+  </ion-item>
+  <ion-item>
+    <ion-icon name="cash" slot="start" role="img"></ion-icon>
+    <ion-input inputmode="decimal" placeholder="Amount" required="" step="0.01" type="number" formcontrolname="amount">
+      <label for="ion-input-8">
+        <input id="ion-input-8" autocapitalize="none" autocomplete="off"
+               autocorrect="off" inputmode="decimal" min="0.01" name="ion-input-8" placeholder="Amount" required=""
+               spellcheck="false" step="0.01" type="number">
+      </label>
+    </ion-input>
+    <ion-note slot="end" class="md">CHF</ion-note>
+  </ion-item>
+  <ion-item>
+    <ion-icon name="text" slot="start" />
+    <ion-input #nameInput formControlName="name" maxlength="40" placeholder="Name" required="true" />
+  </ion-item>
+</ion-content>

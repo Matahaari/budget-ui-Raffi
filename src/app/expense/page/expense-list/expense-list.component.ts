@@ -35,6 +35,8 @@ import { ReactiveFormsModule } from '@angular/forms';
 import { addIcons } from 'ionicons';
 import { add, alertCircleOutline, arrowBack, arrowForward, pricetag, search, swapVertical } from 'ionicons/icons';
 import { CurrencyPipe, DatePipe } from '@angular/common';
+import { Category } from '../../../shared/domain';
+import CategoryModalComponent from '../../../category/component/category-modal/category-modal.component';
 
 @Component({
   selector: 'app-expense-list',
