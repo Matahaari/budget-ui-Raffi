@@ -94,7 +94,7 @@ export default class ExpenseListComponent {
     this.date = addMonths(this.date, number);
   };
 
-  async openexpModal(category?: Category): Promise<void> {
+  async openexpenseModal(category?: Category): Promise<void> {
     const modal = await this.modalCtrl.create({
       component: ExpenseModalComponent,
       componentProps: { category: category ?? {} }
