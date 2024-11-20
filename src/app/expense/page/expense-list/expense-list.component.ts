@@ -94,6 +94,7 @@ export default class ExpenseListComponent {
     this.date = addMonths(this.date, number);
   };
 
+  //Funktion um Modal anzuzeigen. Aufruf durch + Button
   async openexpenseModal(category?: Category): Promise<void> {
     const modal = await this.modalCtrl.create({
       component: ExpenseModalComponent,
