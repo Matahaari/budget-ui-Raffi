@@ -16,7 +16,7 @@
       <ion-col size="12" size-sm="4">
         <ion-item>
           <ion-icon name="swap-vertical" slot="start"></ion-icon>
-          <ion-select label="Date (newest first)" interface="popover">
+          <ion-select placeholder="Date (newest first)" interface="popover">
             <ion-select-option> Created at (newest first)</ion-select-option>
             <ion-select-option> Created at (oldest first)</ion-select-option>
             <ion-select-option> Date (newest first)</ion-select-option>
@@ -26,19 +26,22 @@
           </ion-select>
         </ion-item>
       </ion-col>
-      <ion-item>
-        <ion-icon name="pricetag" slot="start" role="img" class="md"></ion-icon>
-        <ion-col size="12" size-sm="4" style="flex">
-          <ion-select label="Date (newest first)" interface="popover">
+
+
+      <ion-col size="12" size-sm="4">
+        <ion-item>
+          <ion-icon name="pricetag" slot="start"></ion-icon>
+          <ion-select placeholder="Category" interface="popover">
             <ion-select-option> test1</ion-select-option>
             <ion-select-option> test2</ion-select-option>
             <ion-select-option> test3</ion-select-option>
           </ion-select>
-        </ion-col>
-      </ion-item>
+        </ion-item>
+      </ion-col>
+
       <ion-col size="12" size-sm="4" style="flex">
         <ion-item>
-          <ion-icon name="search" slot="start" role="img" class="md"></ion-icon>
+          <ion-icon name="search" slot="start"></ion-icon>
           <ion-input maxlength="40" placeholder="Search" />
         </ion-item>
       </ion-col>
