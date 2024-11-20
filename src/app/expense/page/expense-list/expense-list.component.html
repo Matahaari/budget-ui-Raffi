@@ -13,7 +13,7 @@
 <ion-content>
   <ion-grid>
     <ion-row>
-      <ion-col size="12" size-sm="4" style="flex">
+      <ion-col size="12" size-sm="4">
         <ion-item>
           <ion-icon name="swap-vertical" slot="start"></ion-icon>
           <ion-select label="Date (newest first)" interface="popover">
@@ -22,8 +22,8 @@
             <ion-select-option> Date (newest first)</ion-select-option>
             <ion-select-option> Date (oldest first)</ion-select-option>
             <ion-select-option> Name (A-Z)</ion-select-option>
-            <ion-select-option> Name (Z-A)</ion-select-option><!----><input
-            type="hidden" class="aux-input" name="ion-sel-1" value="date,desc"></ion-select>
+            <ion-select-option> Name (Z-A)</ion-select-option>
+          </ion-select>
         </ion-item>
       </ion-col>
       <ion-item>
@@ -61,11 +61,23 @@
       <ion-icon name="add" role="img" class="md"></ion-icon>
     </ion-fab-button>
   </ion-fab>
-
-  <!-- Footer -->
-  <ion-footer role="contentinfo" class="md footer-md footer-toolbar">
-    <ion-toolbar>
-    </ion-toolbar>
-  </ion-footer>
-
 </ion-content>
+
+<!-- Footer -->
+<ion-footer role="contentinfo" class="md footer-md footer-toolbar-padding">
+  <ion-toolbar class="toolbar-title-default md in-toolbar">
+    <ion-buttons slot="start">
+      <ion-button>
+        <ion-icon slot="icon-only" name="arrow-back" class="sc-ion-buttons-md md flip-rtl" role="img"></ion-icon>
+      </ion-button>
+    </ion-buttons>
+    <ion-title>{{ date | date: "MMMM yyyy" }}</ion-title>
+    <ion-buttons slot="end">
+      <ion-button>
+        <ion-icon slot="icon-only" name="arrow-forward"></ion-icon>
+      </ion-button>
+    </ion-buttons>
+  </ion-toolbar>
+</ion-footer>
+
+
