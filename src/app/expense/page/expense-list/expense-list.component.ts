@@ -37,6 +37,7 @@ import { add, alertCircleOutline, arrowBack, arrowForward, pricetag, search, swa
 import { CurrencyPipe, DatePipe } from '@angular/common';
 import { Category } from '../../../shared/domain';
 import CategoryModalComponent from '../../../category/component/category-modal/category-modal.component';
+import ExpenseModalComponent from '../../component/expense-modal/expense-modal.component';
 
 @Component({
   selector: 'app-expense-list',
@@ -92,4 +93,14 @@ export default class ExpenseListComponent {
   addMonths = (number: number): void => {
     this.date = addMonths(this.date, number);
   };
+
+  async openexpModal(category?: Category): Promise<void> {
+    const modal = await this.modalCtrl.create({
+      component: ExpenseModalComponent,
+      componentProps: { category: category ?? {} }
+    });
+    modal.present();
+    /*const { role } = await modal.onWillDismiss();
+    if (role === 'refresh') this.reloadCategories();*/
+  }
 }
