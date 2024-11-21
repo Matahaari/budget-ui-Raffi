@@ -57,7 +57,28 @@
     <ion-note slot="end" class="md">CHF</ion-note>
   </ion-item>
   <ion-item>
-    <ion-icon name="text" slot="start" />
-    <ion-input #nameInput formControlName="name" maxlength="40" placeholder="Name" required="true" />
+    <ion-icon name="calendar" slot="start" role="img"></ion-icon>
+    <ion-datetime-button datetime="datetime"></ion-datetime-button>
+    <ion-modal [keepContentsMounted]="true">
+      <ng-template>
+        <ion-datetime
+          id="datetime"
+          presentation="date"
+          value="2023-11-02T01:22:00"
+          [formatOptions]="{
+        date: {
+          weekday: 'short',
+          month: 'long',
+          day: '2-digit',
+        },
+        time: {
+          hour: '2-digit',
+          minute: '2-digit',
+        },
+      }"
+        ></ion-datetime>
+      </ng-template>
+    </ion-modal>
+
   </ion-item>
 </ion-content>
