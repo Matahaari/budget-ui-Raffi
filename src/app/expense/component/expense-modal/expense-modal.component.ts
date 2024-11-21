@@ -66,6 +66,7 @@ export default class ExpenseModalComponent {
   // DI
   private readonly modalCtrl = inject(ModalController);
   private readonly categoryService = inject(CategoryService);
+  private readonly ExpenseService = inject(ExpenseService);
   private readonly formBuilder = inject(FormBuilder);
   private readonly loadingIndicatorService = inject(LoadingIndicatorService);
   private readonly toastService = inject(ToastService);
