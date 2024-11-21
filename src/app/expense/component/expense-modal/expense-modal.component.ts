@@ -28,7 +28,8 @@ import CategoryModalComponent from '../../../category/component/category-modal/c
 import { CategoryService } from '../../../category/service/category.service';
 import { LoadingIndicatorService } from '../../../shared/service/loading-indicator.service';
 import { ToastService } from '../../../shared/service/toast.service';
-import { formatISO } from 'date-fns';
+import { formatISO, parseISO } from 'date-fns';
+import { ExpenseUpsertDto } from '../../../shared/domain';
 
 @Component({
   selector: 'app-expense-modal',
@@ -68,8 +69,8 @@ export default class ExpenseModalComponent {
   private readonly toastService = inject(ToastService);
   readonly expenseForm = this.formBuilder.group({
     amount: [0, [Validators.required, Validators.min(0.1)]],
-    categoryId: ['', [Validators.required, Validators.maxLength(40)]],
-    date: [formatISO(new Date())],
+    categoryId: ['', [Validators.maxLength(40)]],
+    date: [formatISO(new Date()), Validators.required],
     id: [null! as string],
     name: ['', [Validators.required, Validators.maxLength(40)]]
   });
@@ -85,6 +86,10 @@ export default class ExpenseModalComponent {
 
   save(): void {
     this.modalCtrl.dismiss(null, 'save');
+    const expense = {
+      ...this.expenseForm.value,
+      date: formatISO(parseISO(this.expenseForm.value.date!), { representation: 'date' })
+    } as ExpenseUpsertDto;
   }
 
   delete(): void {
