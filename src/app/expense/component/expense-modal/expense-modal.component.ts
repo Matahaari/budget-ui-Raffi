@@ -21,10 +21,13 @@ import {
   IonToolbar,
   ModalController
 } from '@ionic/angular/standalone';
-import { ReactiveFormsModule } from '@angular/forms';
+import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { addIcons } from 'ionicons';
 import { add, calendar, cash, close, pricetag, save, text, trash } from 'ionicons/icons';
 import CategoryModalComponent from '../../../category/component/category-modal/category-modal.component';
+import { CategoryService } from '../../../category/service/category.service';
+import { LoadingIndicatorService } from '../../../shared/service/loading-indicator.service';
+import { ToastService } from '../../../shared/service/toast.service';
 
 @Component({
   selector: 'app-expense-modal',
@@ -58,6 +61,17 @@ import CategoryModalComponent from '../../../category/component/category-modal/c
 export default class ExpenseModalComponent {
   // DI
   private readonly modalCtrl = inject(ModalController);
+  private readonly categoryService = inject(CategoryService);
+  private readonly formBuilder = inject(FormBuilder);
+  private readonly loadingIndicatorService = inject(LoadingIndicatorService);
+  private readonly toastService = inject(ToastService);
+  readonly expenseForm = this.formBuilder.group({
+    id: [null! as string], // hidden
+    amount: number;
+    categoryId?: string;
+    date: [formatISO(new Date())];
+    name: ['', [Validators.required, Validators.maxLength(40)]]
+  });
 
   constructor() {
     // Add all used Ionic icons
