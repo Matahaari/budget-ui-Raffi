@@ -28,6 +28,7 @@ import CategoryModalComponent from '../../../category/component/category-modal/c
 import { CategoryService } from '../../../category/service/category.service';
 import { LoadingIndicatorService } from '../../../shared/service/loading-indicator.service';
 import { ToastService } from '../../../shared/service/toast.service';
+import { formatISO } from 'date-fns';
 
 @Component({
   selector: 'app-expense-modal',
@@ -66,10 +67,10 @@ export default class ExpenseModalComponent {
   private readonly loadingIndicatorService = inject(LoadingIndicatorService);
   private readonly toastService = inject(ToastService);
   readonly expenseForm = this.formBuilder.group({
-    id: [null! as string], // hidden
-    amount: number;
-    categoryId?: string;
-    date: [formatISO(new Date())];
+    amount: [0, [Validators.required, Validators.min(0.1)]],
+    categoryId: ['', [Validators.required, Validators.maxLength(40)]],
+    date: [formatISO(new Date())],
+    id: [null! as string],
     name: ['', [Validators.required, Validators.maxLength(40)]]
   });
 
