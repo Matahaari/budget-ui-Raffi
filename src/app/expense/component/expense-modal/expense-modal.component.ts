@@ -30,6 +30,8 @@ import { LoadingIndicatorService } from '../../../shared/service/loading-indicat
 import { ToastService } from '../../../shared/service/toast.service';
 import { formatISO, parseISO } from 'date-fns';
 import { ExpenseUpsertDto } from '../../../shared/domain';
+import { finalize } from 'rxjs';
+import { ExpenseService } from '../../service/expense.service';
 
 @Component({
   selector: 'app-expense-modal',
@@ -85,11 +87,24 @@ export default class ExpenseModalComponent {
   }
 
   save(): void {
-    this.modalCtrl.dismiss(null, 'save');
-    const expense = {
-      ...this.expenseForm.value,
-      date: formatISO(parseISO(this.expenseForm.value.date!), { representation: 'date' })
-    } as ExpenseUpsertDto;
+    this.loadingIndicatorService.showLoadingIndicator({ message: 'Saving category' }).subscribe(loadingIndicator => {
+      const expense = {
+        ...this.expenseForm.value,
+        name: this.expenseForm.value.name,
+        categoryId: this.expenseForm.value.categoryId,
+        amount: this.expenseForm.value.amount,
+        date: formatISO(parseISO(this.expenseForm.value.date!), { representation: 'date' })
+      } as ExpenseUpsertDto;
+      this.ExpenseService.upsertExpense(expense)
+        .pipe(finalize(() => loadingIndicator.dismiss()))
+        .subscribe({
+          next: () => {
+            this.toastService.displaySuccessToast('Category saved');
+            this.modalCtrl.dismiss(null, 'refresh');
+          },
+          error: error => this.toastService.displayWarningToast('Could not save category', error)
+        });
+    });
   }
 
   delete(): void {
