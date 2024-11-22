@@ -25,7 +25,7 @@ import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { addIcons } from 'ionicons';
 import { add, calendar, cash, close, pricetag, save, text, trash } from 'ionicons/icons';
 import CategoryModalComponent from '../../../category/component/category-modal/category-modal.component';
-import { CategoryService } from '../../../category/service/category.service';
+//import { CategoryService } from '../../../category/service/category.service';
 import { LoadingIndicatorService } from '../../../shared/service/loading-indicator.service';
 import { ToastService } from '../../../shared/service/toast.service';
 import { formatISO, parseISO } from 'date-fns';
@@ -65,7 +65,7 @@ import { ExpenseService } from '../../service/expense.service';
 export default class ExpenseModalComponent {
   // DI
   private readonly modalCtrl = inject(ModalController);
-  private readonly categoryService = inject(CategoryService);
+  // private readonly categoryService = inject(CategoryService);
   private readonly ExpenseService = inject(ExpenseService);
   private readonly formBuilder = inject(FormBuilder);
   private readonly loadingIndicatorService = inject(LoadingIndicatorService);
@@ -74,7 +74,7 @@ export default class ExpenseModalComponent {
     amount: [0, [Validators.required, Validators.min(0.1)]],
     categoryId: ['', [Validators.maxLength(40)]],
     date: [formatISO(new Date()), Validators.required],
-    id: [null! as string],
+    id: [null! as string], // hidden
     name: ['', [Validators.required, Validators.maxLength(40)]]
   });
 
@@ -88,9 +88,10 @@ export default class ExpenseModalComponent {
   }
 
   save(): void {
-    this.loadingIndicatorService.showLoadingIndicator({ message: 'Saving category' }).subscribe(loadingIndicator => {
+    this.loadingIndicatorService.showLoadingIndicator({ message: 'Saving expense' }).subscribe(loadingIndicator => {
       const expense = {
         ...this.expenseForm.value,
+        id: this.expenseForm.value.id,
         name: this.expenseForm.value.name,
         categoryId: this.expenseForm.value.categoryId,
         amount: this.expenseForm.value.amount,
@@ -100,10 +101,10 @@ export default class ExpenseModalComponent {
         .pipe(finalize(() => loadingIndicator.dismiss()))
         .subscribe({
           next: () => {
-            this.toastService.displaySuccessToast('Category saved');
+            this.toastService.displaySuccessToast('expense saved');
             this.modalCtrl.dismiss(null, 'refresh');
           },
-          error: error => this.toastService.displayWarningToast('Could not save category', error)
+          error: error => this.toastService.displayWarningToast('Could not save expense', error)
         });
     });
   }

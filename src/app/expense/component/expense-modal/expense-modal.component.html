@@ -28,15 +28,15 @@
 <!-- ------- -->
 <!-- Content -->
 <!-- ------- -->
-<ion-content class="ion-padding">
+<ion-content class="ion-padding" [formGroup]="expenseForm">
   <!-- Input -->
   <ion-item>
     <ion-icon name="text" slot="start" role="img" class="md"></ion-icon>
-    <ion-input maxlength="40" placeholder="Name" required="" formcontrolname="name" autofocus="true" />
+    <ion-input #nameInput formControlName="name" maxlength="40" placeholder="Name" required="true" />
   </ion-item>
   <ion-item>
     <ion-icon name="pricetag" slot="start" role="img" class="md"></ion-icon>
-    <ion-select placeholder="Category" interface="popover">
+    <ion-select placeholder="Category" interface="popover" formControlName="categoryId">
       <ion-select-option> test1</ion-select-option>
       <ion-select-option> test2</ion-select-option>
       <ion-select-option> test3</ion-select-option>
@@ -47,7 +47,7 @@
   </ion-item>
   <ion-item>
     <ion-icon name="cash" slot="start" role="img"></ion-icon>
-    <ion-input inputmode="decimal" placeholder="Amount" required="" step="0.01" type="number" formcontrolname="amount">
+    <ion-input inputmode="decimal" placeholder="Amount" required="" step="0.01" type="number" formControlName="amount">
       <label for="ion-input-8">
         <input id="ion-input-8" autocapitalize="none" autocomplete="off"
                autocorrect="off" inputmode="decimal" min="0.01" name="ion-input-8" placeholder="Amount" required=""
