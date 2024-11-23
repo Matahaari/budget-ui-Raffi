@@ -110,13 +110,25 @@ export default class ExpenseListComponent {
     /*const { role } = await modal.onWillDismiss();
     if (role === 'refresh') this.reloadCategories();*/
   }
+
   ionViewDidEnter(): void {
     this.loadAllCategories();
   }
+
   private loadAllCategories(): void {
     this.categoryService.getAllCategories({ sort: 'name,asc' }).subscribe({
       next: categories => (this.categories = categories),
       error: error => this.toastService.displayErrorToast('Could not load categories', error)
     });
+  }
+
+  async openModal(category?: Category): Promise<void> {
+    const modal = await this.modalCtrl.create({
+      component: CategoryModalComponent,
+      componentProps: { category: category ?? {} }
+    });
+    modal.present();
+    const { role } = await modal.onWillDismiss();
+    // if (role === 'refresh') this.reloadCategories();
   }
 }
