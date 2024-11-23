@@ -65,7 +65,7 @@
           @case (0) {
             <ion-item>
               <ion-icon slot="start" name="alert-circle-outline" />
-              <ion-label> No categories found</ion-label>
+              <ion-label> No Expenses found</ion-label>
             </ion-item>
           }
 
@@ -96,13 +96,13 @@
 <ion-footer role="contentinfo" class="md footer-md footer-toolbar-padding">
   <ion-toolbar class="toolbar-title-default md in-toolbar">
     <ion-buttons slot="start">
-      <ion-button>
+      <ion-button  (click)="addMonths(+1)">
         <ion-icon slot="icon-only" name="arrow-back" class="sc-ion-buttons-md md flip-rtl" role="img"></ion-icon>
       </ion-button>
     </ion-buttons>
     <ion-title>{{ date | date: "MMMM yyyy" }}</ion-title>
     <ion-buttons slot="end">
-      <ion-button>
+      <ion-button  (click)="addMonths(-1)">
         <ion-icon slot="icon-only" name="arrow-forward"></ion-icon>
       </ion-button>
     </ion-buttons>
