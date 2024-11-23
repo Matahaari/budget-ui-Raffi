@@ -74,7 +74,6 @@ export default class CategoryModalComponent implements ViewDidEnter, ViewWillEnt
   save(): void {
     this.loadingIndicatorService.showLoadingIndicator({ message: 'Saving category' }).subscribe(loadingIndicator => {
       const category = this.categoryForm.value as CategoryUpsertDto;
-      console.log(category);
       this.categoryService
         .upsertCategory(category)
         .pipe(finalize(() => loadingIndicator.dismiss()))

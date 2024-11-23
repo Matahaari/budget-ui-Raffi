@@ -1,4 +1,4 @@
-import { Component, inject } from '@angular/core';
+import { Component, inject, Input } from '@angular/core';
 import {
   IonButton,
   IonButtons,
@@ -13,10 +13,13 @@ import {
   IonInput,
   IonItem,
   IonLabel,
+  IonList,
+  IonRadioGroup,
   IonModal,
   IonNote,
   IonSelect,
   IonSelectOption,
+  IonSkeletonText,
   IonTitle,
   IonToolbar,
   ModalController
@@ -29,9 +32,12 @@ import CategoryModalComponent from '../../../category/component/category-modal/c
 import { LoadingIndicatorService } from '../../../shared/service/loading-indicator.service';
 import { ToastService } from '../../../shared/service/toast.service';
 import { formatISO, parseISO } from 'date-fns';
-import { ExpenseUpsertDto } from '../../../shared/domain';
+import { CategoryUpsertDto, ExpenseUpsertDto } from '../../../shared/domain';
 import { finalize } from 'rxjs';
 import { ExpenseService } from '../../service/expense.service';
+import { Category } from '../../../shared/domain';
+import { id } from 'date-fns/locale';
+import { RefresherCustomEvent } from '@ionic/angular';
 
 @Component({
   selector: 'app-expense-modal',
@@ -41,6 +47,7 @@ import { ExpenseService } from '../../service/expense.service';
     ReactiveFormsModule,
 
     // Ionic
+    IonList,
     IonHeader,
     IonToolbar,
     IonButtons,
@@ -59,7 +66,9 @@ import { ExpenseService } from '../../service/expense.service';
     IonModal,
     IonDatetime,
     IonFab,
-    IonFabButton
+    IonFabButton,
+    IonSkeletonText,
+    IonRadioGroup
   ]
 })
 export default class ExpenseModalComponent {
@@ -70,9 +79,14 @@ export default class ExpenseModalComponent {
   private readonly formBuilder = inject(FormBuilder);
   private readonly loadingIndicatorService = inject(LoadingIndicatorService);
   private readonly toastService = inject(ToastService);
+  @Input() category: Category = {} as Category;
+  categories: Category[] | null = null;
+  @Component({
+    selector: 'expense-modal'
+  })
   readonly expenseForm = this.formBuilder.group({
     amount: [0, [Validators.required, Validators.min(0.1)]],
-    categoryId: ['', [Validators.maxLength(40)]],
+    categoryId: [this.category.id!],
     date: [formatISO(new Date()), Validators.required],
     id: [null! as string], // hidden
     name: ['', [Validators.required, Validators.maxLength(40)]]
@@ -92,11 +106,12 @@ export default class ExpenseModalComponent {
       const expense = {
         ...this.expenseForm.value,
         id: this.expenseForm.value.id,
-        name: this.expenseForm.value.name,
         categoryId: this.expenseForm.value.categoryId,
+        name: this.expenseForm.value.name,
         amount: this.expenseForm.value.amount,
         date: formatISO(parseISO(this.expenseForm.value.date!), { representation: 'date' })
       } as ExpenseUpsertDto;
+      console.log(expense);
       this.ExpenseService.upsertExpense(expense)
         .pipe(finalize(() => loadingIndicator.dismiss()))
         .subscribe({
@@ -118,5 +133,15 @@ export default class ExpenseModalComponent {
     categoryModal.present();
     const { role } = await categoryModal.onWillDismiss();
     console.log('role', role);
+  }
+
+  async openModal(category?: Category): Promise<void> {
+    const modal = await this.modalCtrl.create({
+      component: CategoryModalComponent,
+      componentProps: { category: category ?? {} }
+    });
+    modal.present();
+    const { role } = await modal.onWillDismiss();
+    //if (role === 'refresh') this.reloadCategories();
   }
 }
