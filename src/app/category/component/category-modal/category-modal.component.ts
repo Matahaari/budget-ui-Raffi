@@ -96,7 +96,6 @@ export default class CategoryModalComponent implements ViewDidEnter, ViewWillEnt
   }
 
   delete(): void {
-    //this.modalCtrl.dismiss(null, 'delete');
     this.actionSheetService
       .showDeletionConfirmation('Are you sure you want to delete this category?')
       .pipe(mergeMap(() => this.loadingIndicatorService.showLoadingIndicator({ message: 'Deleting category' })))

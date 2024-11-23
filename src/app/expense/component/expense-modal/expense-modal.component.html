@@ -29,11 +29,14 @@
 <!-- Content -->
 <!-- ------- -->
 <ion-content class="ion-padding" [formGroup]="expenseForm">
-  <!-- Input -->
+
+  <!-- Name -->
   <ion-item>
     <ion-icon name="text" slot="start" role="img" class="md"></ion-icon>
     <ion-input #nameInput formControlName="name" maxlength="40" placeholder="Name" required="true" />
   </ion-item>
+
+  <!-- Category -->
   <ion-item>
     <ion-icon name="pricetag" slot="start" role="img" class="md"></ion-icon>
     <ion-select placeholder="Category" interface="popover" formControlName="categoryId" >
@@ -47,6 +50,8 @@
       <ion-icon slot="icon-only" name="add" role="img"></ion-icon>
     </ion-button>
   </ion-item>
+
+  <!-- Amount -->
   <ion-item>
     <ion-icon name="cash" slot="start" role="img"></ion-icon>
     <ion-input inputmode="decimal" placeholder="Amount" required="" step="0.01" type="number" formControlName="amount">
@@ -58,6 +63,8 @@
     </ion-input>
     <ion-note slot="end" class="md">CHF</ion-note>
   </ion-item>
+
+  <!-- Date -->
   <ion-item>
     <ion-icon name="calendar" slot="start" role="img"></ion-icon>
     <ion-datetime-button datetime="datetime"></ion-datetime-button>

@@ -35,6 +35,7 @@ import { formatISO, parseISO } from 'date-fns';
 import { Category, ExpenseUpsertDto } from '../../../shared/domain';
 import { finalize } from 'rxjs';
 import { ExpenseService } from '../../service/expense.service';
+import { RefresherCustomEvent } from '@ionic/angular';
 
 @Component({
   selector: 'app-expense-modal',
@@ -139,5 +140,15 @@ export default class ExpenseModalComponent {
       next: categories => (this.categories = categories),
       error: error => this.toastService.displayErrorToast('Could not load categories', error)
     });
+  }
+
+  async openModal(category?: Category): Promise<void> {
+    const modal = await this.modalCtrl.create({
+      component: CategoryModalComponent,
+      componentProps: { category: category ?? {} }
+    });
+    modal.present();
+    const { role } = await modal.onWillDismiss();
+    // if (role === 'refresh') this.reloadCategories();
   }
 }
