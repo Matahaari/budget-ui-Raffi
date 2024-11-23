@@ -36,35 +36,11 @@
   </ion-item>
   <ion-item>
     <ion-icon name="pricetag" slot="start" role="img" class="md"></ion-icon>
-    <ion-select placeholder="Category" interface="popover" formControlName="categoryId" [formGroup]="">
-      @switch (categories?.length) {
-        <!-- Skeleton -->
-        @case (null) {
-          @for (i of [0, 1, 2, 3, 4, 5, 6, 7, 8, 9]; track i) {
-            <ion-item>
-              <ion-label>
-                <ion-skeleton-text [animated]="true" style="width: 80px" />
-              </ion-label>
-            </ion-item>
-          }
-        }
-
-        <!-- Empty List -->
-        @case (0) {
-          <ion-item>
-            <ion-icon slot="start" name="alert-circle-outline" />
-            <ion-label> No categories found</ion-label>
-          </ion-item>
-        }
-
-        <!-- Categories -->
-        @default {
-          @for (category of categories; track category.id) {
-            <ion-item button="true" [detail]="true" (click)="openModal(category)">
-              <ion-label> {{ category.name }}</ion-label>
-            </ion-item>
-          }
-        }
+    <ion-select placeholder="Category" interface="popover" formControlName="categoryId" >
+      @for (category of categories; track category.id) {
+        <ion-select-option [value]="category.id">
+          {{ category.name }}
+        </ion-select-option>
       }
     </ion-select>
     <ion-button slot="end">

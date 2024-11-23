@@ -14,9 +14,9 @@ import {
   IonItem,
   IonLabel,
   IonList,
-  IonRadioGroup,
   IonModal,
   IonNote,
+  IonRadioGroup,
   IonSelect,
   IonSelectOption,
   IonSkeletonText,
@@ -28,16 +28,13 @@ import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { addIcons } from 'ionicons';
 import { add, calendar, cash, close, pricetag, save, text, trash } from 'ionicons/icons';
 import CategoryModalComponent from '../../../category/component/category-modal/category-modal.component';
-//import { CategoryService } from '../../../category/service/category.service';
+import { CategoryService } from '../../../category/service/category.service';
 import { LoadingIndicatorService } from '../../../shared/service/loading-indicator.service';
 import { ToastService } from '../../../shared/service/toast.service';
 import { formatISO, parseISO } from 'date-fns';
-import { CategoryUpsertDto, ExpenseUpsertDto } from '../../../shared/domain';
+import { Category, ExpenseUpsertDto } from '../../../shared/domain';
 import { finalize } from 'rxjs';
 import { ExpenseService } from '../../service/expense.service';
-import { Category } from '../../../shared/domain';
-import { id } from 'date-fns/locale';
-import { RefresherCustomEvent } from '@ionic/angular';
 
 @Component({
   selector: 'app-expense-modal',
@@ -74,16 +71,14 @@ import { RefresherCustomEvent } from '@ionic/angular';
 export default class ExpenseModalComponent {
   // DI
   private readonly modalCtrl = inject(ModalController);
-  // private readonly categoryService = inject(CategoryService);
+  private readonly categoryService = inject(CategoryService);
   private readonly ExpenseService = inject(ExpenseService);
   private readonly formBuilder = inject(FormBuilder);
   private readonly loadingIndicatorService = inject(LoadingIndicatorService);
   private readonly toastService = inject(ToastService);
   @Input() category: Category = {} as Category;
-  categories: Category[] | null = null;
-  @Component({
-    selector: 'expense-modal'
-  })
+  categories: Category[] = [];
+
   readonly expenseForm = this.formBuilder.group({
     amount: [0, [Validators.required, Validators.min(0.1)]],
     categoryId: [this.category.id!],
@@ -135,13 +130,14 @@ export default class ExpenseModalComponent {
     console.log('role', role);
   }
 
-  async openModal(category?: Category): Promise<void> {
-    const modal = await this.modalCtrl.create({
-      component: CategoryModalComponent,
-      componentProps: { category: category ?? {} }
+  ionViewDidEnter(): void {
+    this.loadAllCategories();
+  }
+
+  private loadAllCategories(): void {
+    this.categoryService.getAllCategories({ sort: 'name,asc' }).subscribe({
+      next: categories => (this.categories = categories),
+      error: error => this.toastService.displayErrorToast('Could not load categories', error)
     });
-    modal.present();
-    const { role } = await modal.onWillDismiss();
-    //if (role === 'refresh') this.reloadCategories();
   }
 }

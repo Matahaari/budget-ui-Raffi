@@ -41,4 +41,6 @@ export class ToastService {
   private displayToast(options: ToastOptions): void {
     this.toastController.create(options).then(toast => toast.present());
   }
+
+  displayErrorToast(couldNotLoadCategories: string, error: any) {}
 }
