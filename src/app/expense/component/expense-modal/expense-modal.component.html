@@ -17,7 +17,7 @@
 
     <!-- Save Button -->
     <ion-buttons slot="end">
-      <ion-button (click)="save()">
+      <ion-button (click)="save()" [disabled]="expenseForm.pristine || expenseForm.invalid ">
         <ion-icon slot="start" name="save" />
         Save
       </ion-button>

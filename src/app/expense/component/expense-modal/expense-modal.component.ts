@@ -81,7 +81,7 @@ export default class ExpenseModalComponent {
   categories: Category[] = [];
 
   readonly expenseForm = this.formBuilder.group({
-    amount: [0, [Validators.required, Validators.min(0.1)]],
+    amount: [0, [Validators.min(0.1), Validators.required]],
     categoryId: [this.category.id!],
     date: [formatISO(new Date()), Validators.required],
     id: [null! as string], // hidden
