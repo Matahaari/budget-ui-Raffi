@@ -30,9 +30,11 @@
         <ion-item>
           <ion-icon name="pricetag" slot="start"></ion-icon>
           <ion-select placeholder="Category" interface="popover">
-            <ion-select-option> test1</ion-select-option>
-            <ion-select-option> test2</ion-select-option>
-            <ion-select-option> test3</ion-select-option>
+            @for (category of categories; track category.id) {
+              <ion-select-option [value]="category.id">
+                {{ category.name }}
+              </ion-select-option>
+            }
           </ion-select>
         </ion-item>
       </ion-col>
@@ -43,6 +45,8 @@
         </ion-item>
       </ion-col>
     </ion-row>
+
+    <!-- Kategorien Anzeigen-->
     <ion-row>
       <ion-col>
         <ion-item>

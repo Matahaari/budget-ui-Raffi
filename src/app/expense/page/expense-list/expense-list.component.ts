@@ -1,4 +1,4 @@
-import { Component, inject } from '@angular/core';
+import { Component, inject, Input } from '@angular/core';
 import { addMonths, set } from 'date-fns';
 import {
   IonButton,
@@ -38,6 +38,8 @@ import { CurrencyPipe, DatePipe } from '@angular/common';
 import { Category } from '../../../shared/domain';
 import CategoryModalComponent from '../../../category/component/category-modal/category-modal.component';
 import ExpenseModalComponent from '../../component/expense-modal/expense-modal.component';
+import { CategoryService } from '../../../category/service/category.service';
+import { ToastService } from '../../../shared/service/toast.service';
 
 @Component({
   selector: 'app-expense-list',
@@ -82,7 +84,11 @@ import ExpenseModalComponent from '../../component/expense-modal/expense-modal.c
 export default class ExpenseListComponent {
   // DI
   private readonly modalCtrl = inject(ModalController);
+  private readonly categoryService = inject(CategoryService);
+  private readonly toastService = inject(ToastService);
 
+  @Input() category: Category = {} as Category;
+  categories: Category[] = [];
   date = set(new Date(), { date: 1 });
 
   constructor() {
@@ -103,5 +109,14 @@ export default class ExpenseListComponent {
     modal.present();
     /*const { role } = await modal.onWillDismiss();
     if (role === 'refresh') this.reloadCategories();*/
+  }
+  ionViewDidEnter(): void {
+    this.loadAllCategories();
+  }
+  private loadAllCategories(): void {
+    this.categoryService.getAllCategories({ sort: 'name,asc' }).subscribe({
+      next: categories => (this.categories = categories),
+      error: error => this.toastService.displayErrorToast('Could not load categories', error)
+    });
   }
 }
