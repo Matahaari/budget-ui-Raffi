@@ -98,6 +98,12 @@
       <ion-icon name="add" role="img" class="md"></ion-icon>
     </ion-fab-button>
   </ion-fab>
+
+  <!-- Refresher -->
+  <ion-refresher slot="fixed" (ionRefresh)="reloadExpenses($event)" [disabled]="loading">
+    <ion-refresher-content />
+  </ion-refresher>
+
 </ion-content>
 
 <!-- ------ -->
@@ -118,5 +124,6 @@
     </ion-buttons>
   </ion-toolbar>
 </ion-footer>
+
 
 
