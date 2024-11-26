@@ -36,7 +36,7 @@ import { NonNullableFormBuilder, ReactiveFormsModule } from '@angular/forms';
 import { addIcons } from 'ionicons';
 import { add, alertCircleOutline, arrowBack, arrowForward, pricetag, search, swapVertical } from 'ionicons/icons';
 import { CurrencyPipe, DatePipe } from '@angular/common';
-import { Category, Expense, ExpenseCriteria } from '../../../shared/domain';
+import { Category, Expense, ExpenseCriteria, SortOption } from '../../../shared/domain';
 import ExpenseModalComponent from '../../component/expense-modal/expense-modal.component';
 import { CategoryService } from '../../../category/service/category.service';
 import { ToastService } from '../../../shared/service/toast.service';
@@ -99,8 +99,16 @@ export default class ExpenseListComponent implements ViewDidEnter {
   private readonly ExpenseService = inject(ExpenseService);
   private searchFormSubscription?: Subscription;
   private readonly formBuilder = inject(NonNullableFormBuilder);
-  readonly initialSort = 'date';
+  readonly initialSort = 'date, asc';
   readonly searchForm = this.formBuilder.group({ name: [''], sort: [this.initialSort] });
+  readonly sortOptions: SortOption[] = [
+    { label: 'Date (Newest)', value: 'date,asc' },
+    { label: 'Date (oldest)', value: 'date,desc' },
+    { label: 'Created at (newest first)', value: 'createdAt,desc' },
+    { label: 'Created at (oldest first)', value: 'createdAt,asc' },
+    { label: 'Name (A-Z)', value: 'name,asc' },
+    { label: 'Name (Z-A)', value: 'name,desc' }
+  ];
   date = set(new Date(), { date: 1 });
   categories: Category[] = [];
   lastPageReached = false;

@@ -14,18 +14,17 @@
 <!-- Content -->
 <!-- ------- -->
 <ion-content>
-  <ion-grid>
+  <ion-grid [formGroup]="searchForm" >
     <ion-row>
       <ion-col size="12" size-sm="4">
         <ion-item>
           <ion-icon name="swap-vertical" slot="start"></ion-icon>
-          <ion-select placeholder="Date (newest first)" interface="popover">
-            <ion-select-option> Created at (newest first)</ion-select-option>
-            <ion-select-option> Created at (oldest first)</ion-select-option>
-            <ion-select-option> Date (newest first)</ion-select-option>
-            <ion-select-option> Date (oldest first)</ion-select-option>
-            <ion-select-option> Name (A-Z)</ion-select-option>
-            <ion-select-option> Name (Z-A)</ion-select-option>
+          <ion-select placeholder="Date (newest first)" interface="popover" formControlName="sort">
+            @for (sortOption of sortOptions; track sortOption.label) {
+              <ion-select-option [value]="sortOption.value">
+                {{ sortOption.label }}
+              </ion-select-option>
+            }
           </ion-select>
         </ion-item>
       </ion-col>
