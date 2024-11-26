@@ -98,7 +98,6 @@ export default class ExpenseListComponent implements ViewDidEnter {
   date = set(new Date(), { date: 1 });
   categories: Category[] = [];
   expenses: Expense[] | null = null;
-
   lastPageReached = false;
   loading = false;
   searchCriteria: ExpenseCriteria = { page: 0, size: 25, sort: this.initialSort };

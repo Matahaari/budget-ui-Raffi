@@ -71,9 +71,9 @@
 
           <!-- Categories -->
           @default {
-            @for (category of expenses; track category.id) {
-              <ion-item button="true" [detail]="true" (click)="openModal(category)">
-                <ion-label> {{ category.name }}</ion-label>
+            @for (expense of expenses; track expense.id) {
+              <ion-item button="true" [detail]="true" (click)="openexpenseModal(expense)">
+                <ion-label> {{ expense.name }}</ion-label>
               </ion-item>
             }
           }
