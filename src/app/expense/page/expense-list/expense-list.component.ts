@@ -32,7 +32,7 @@ import {
   ModalController,
   ViewDidEnter
 } from '@ionic/angular/standalone';
-import { ReactiveFormsModule } from '@angular/forms';
+import { NonNullableFormBuilder, ReactiveFormsModule } from '@angular/forms';
 import { addIcons } from 'ionicons';
 import { add, alertCircleOutline, arrowBack, arrowForward, pricetag, search, swapVertical } from 'ionicons/icons';
 import { CurrencyPipe, DatePipe } from '@angular/common';
@@ -43,7 +43,7 @@ import { CategoryService } from '../../../category/service/category.service';
 import { ToastService } from '../../../shared/service/toast.service';
 import { ExpenseService } from '../../service/expense.service';
 import { Expense, ExpenseCriteria, SortOption } from '../../../shared/domain';
-import { finalize } from 'rxjs';
+import { debounce, finalize, interval, Subscription } from 'rxjs';
 
 @Component({
   selector: 'app-expense-list',
@@ -91,15 +91,14 @@ export default class ExpenseListComponent implements ViewDidEnter {
   private readonly categoryService = inject(CategoryService);
   private readonly toastService = inject(ToastService);
   private readonly ExpenseService = inject(ExpenseService);
+  private searchFormSubscription?: Subscription;
+  private readonly formBuilder = inject(NonNullableFormBuilder);
+  readonly initialSort = 'name,asc';
+  readonly searchForm = this.formBuilder.group({ name: [''], sort: [this.initialSort] });
   date = set(new Date(), { date: 1 });
-
-  //@Input() category: Category = {} as Category;
   categories: Category[] = [];
-
-  // @Input() expense: Expense = {} as Expense;
   expenses: Expense[] = [];
 
-  readonly initialSort = 'name,asc';
   lastPageReached = false;
   loading = false;
   searchCriteria: ExpenseCriteria = { page: 0, size: 25, sort: this.initialSort };
@@ -127,6 +126,12 @@ export default class ExpenseListComponent implements ViewDidEnter {
   ionViewDidEnter(): void {
     this.loadAllCategories();
     this.loadExpenses();
+    this.searchFormSubscription = this.searchForm.valueChanges
+      .pipe(debounce(searchParams => interval(searchParams.name?.length ? 400 : 0)))
+      .subscribe(searchParams => {
+        this.searchCriteria = { ...this.searchCriteria, ...searchParams, yearMonth: '' };
+        this.loadExpenses();
+      });
   }
 
   private loadAllCategories(): void {
@@ -159,7 +164,7 @@ export default class ExpenseListComponent implements ViewDidEnter {
       .subscribe({
         next: expense => {
           if (this.searchCriteria.page === 0 || !this.expenses) this.expenses = [];
-          this.expenses.push(...expense);
+          this.expenses.push(...expense.values());
           // this.lastPageReached = expense.sort();
         },
         error: error => this.toastService.displayWarningToast('Could not load expenses', error)
