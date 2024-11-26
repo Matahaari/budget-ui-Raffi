@@ -93,11 +93,11 @@ export default class ExpenseListComponent implements ViewDidEnter {
   private readonly ExpenseService = inject(ExpenseService);
   date = set(new Date(), { date: 1 });
 
-  @Input() category: Category = {} as Category;
+  //@Input() category: Category = {} as Category;
   categories: Category[] = [];
 
-  @Input() expense: Expense = {} as Expense;
-  expenses: Expense[] | null = null;
+  // @Input() expense: Expense = {} as Expense;
+  expenses: Expense[] = [];
 
   readonly initialSort = 'name,asc';
   lastPageReached = false;
@@ -159,8 +159,8 @@ export default class ExpenseListComponent implements ViewDidEnter {
       .subscribe({
         next: expense => {
           if (this.searchCriteria.page === 0 || !this.expenses) this.expenses = [];
-          /*this.expenses.push(...expense.content);
-          this.lastPageReached = expense.last;*/
+          this.expenses.push(...expense);
+          // this.lastPageReached = expense.sort();
         },
         error: error => this.toastService.displayWarningToast('Could not load expenses', error)
       });
