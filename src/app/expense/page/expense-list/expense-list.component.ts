@@ -30,7 +30,8 @@ import {
   IonTitle,
   IonToolbar,
   ModalController,
-  ViewDidEnter
+  ViewDidEnter,
+  ViewDidLeave
 } from '@ionic/angular/standalone';
 import { NonNullableFormBuilder, ReactiveFormsModule } from '@angular/forms';
 import { addIcons } from 'ionicons';
@@ -90,7 +91,7 @@ interface ExpenseGroup {
     IonButton
   ]
 })
-export default class ExpenseListComponent implements ViewDidEnter {
+export default class ExpenseListComponent implements ViewDidEnter, ViewDidLeave {
   // DI
 
   private readonly modalCtrl = inject(ModalController);
@@ -153,11 +154,14 @@ export default class ExpenseListComponent implements ViewDidEnter {
     this.searchFormSubscription = this.searchForm.valueChanges
       .pipe(debounce(searchParams => interval(searchParams.name?.length ? 400 : 0)))
       .subscribe(searchParams => {
-        this.searchCriteria = { ...this.searchCriteria, ...searchParams, yearMonth: '' };
+        this.searchCriteria = { ...this.searchCriteria, ...searchParams, page: 0 };
         this.loadExpenses();
       });
   }
-
+  ionViewDidLeave(): void {
+    this.searchFormSubscription?.unsubscribe();
+    this.searchFormSubscription = undefined;
+  }
   private loadAllCategories(): void {
     this.categoryService.getAllCategories({ sort: 'name,asc' }).subscribe({
       next: categories => (this.categories = categories),
