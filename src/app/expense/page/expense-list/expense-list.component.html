@@ -3,6 +3,9 @@
 <!-- ------ -->
 <ion-header>
   <ion-toolbar>
+    @if (loading) {
+      <ion-progress-bar type="indeterminate" />
+    }
     <ion-title>Expenses</ion-title>
   </ion-toolbar>
 </ion-header>
