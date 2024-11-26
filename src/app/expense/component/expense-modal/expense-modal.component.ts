@@ -142,13 +142,13 @@ export default class ExpenseModalComponent {
     });
   }
 
-  async openModal(category?: Category): Promise<void> {
+  async opencatModal(category?: Category): Promise<void> {
     const modal = await this.modalCtrl.create({
       component: CategoryModalComponent,
       componentProps: { category: category ?? {} }
     });
     modal.present();
     const { role } = await modal.onWillDismiss();
-    // if (role === 'refresh') this.reloadExpenses();
+    if (role === 'refresh') this.loadAllCategories();
   }
 }
