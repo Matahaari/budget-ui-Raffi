@@ -106,13 +106,13 @@
 <ion-footer role="contentinfo" class="md footer-md footer-toolbar-padding">
   <ion-toolbar class="toolbar-title-default md in-toolbar">
     <ion-buttons slot="start">
-      <ion-button (click)="addMonths(this.date-1)">
+      <ion-button (click)="addMonths(-1)">
         <ion-icon slot="icon-only" name="arrow-back" class="sc-ion-buttons-md md flip-rtl" role="img"></ion-icon>
       </ion-button>
     </ion-buttons>
     <ion-title>{{ date | date: "MMMM yyyy" }}</ion-title>
     <ion-buttons slot="end">
-      <ion-button (click)="addMonths(this.date+1)">
+      <ion-button (click)="addMonths(+1)">
         <ion-icon slot="icon-only" name="arrow-forward"></ion-icon>
       </ion-button>
     </ion-buttons>

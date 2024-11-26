@@ -116,6 +116,7 @@ export default class ExpenseListComponent implements ViewDidEnter {
 
   addMonths = (number: number): void => {
     this.date = addMonths(this.date, number);
+    this.loadExpenses();
   };
 
   //Funktion um Modal anzuzeigen. Aufruf durch + Button
