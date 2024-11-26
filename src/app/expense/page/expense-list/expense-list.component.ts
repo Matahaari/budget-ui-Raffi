@@ -100,14 +100,13 @@ export default class ExpenseListComponent implements ViewDidEnter {
   private readonly ExpenseService = inject(ExpenseService);
   private searchFormSubscription?: Subscription;
   private readonly formBuilder = inject(NonNullableFormBuilder);
-  readonly initialSort = 'name,asc';
+  readonly initialSort = 'date';
   readonly searchForm = this.formBuilder.group({ name: [''], sort: [this.initialSort] });
   date = set(new Date(), { date: 1 });
   categories: Category[] = [];
-  expenses: Expense[] | null = null;
   lastPageReached = false;
   loading = false;
-  searchCriteria: ExpenseCriteria = { yearMonth: '', name: '', page: 0, size: 25, sort: this.initialSort };
+  searchCriteria: ExpenseCriteria = { page: 0, size: 25, sort: this.initialSort };
   expenseGroups: ExpenseGroup[] | null = null;
 
   constructor() {
@@ -147,7 +146,7 @@ export default class ExpenseListComponent implements ViewDidEnter {
       error: error => this.toastService.displayErrorToast('Could not load categories', error)
     });
   }
-
+  /*
   async openModal(category?: Category): Promise<void> {
     const modal = await this.modalCtrl.create({
       component: CategoryModalComponent,
@@ -156,7 +155,7 @@ export default class ExpenseListComponent implements ViewDidEnter {
     modal.present();
     const { role } = await modal.onWillDismiss();
     // if (role === 'refresh') this.reloadCategories();
-  }
+  }*/
 
   private loadExpenses(next: () => void = () => {}): void {
     this.searchCriteria.yearMonth = formatPeriod(this.date);
