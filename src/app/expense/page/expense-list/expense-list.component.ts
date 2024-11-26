@@ -29,7 +29,8 @@ import {
   IonSkeletonText,
   IonTitle,
   IonToolbar,
-  ModalController
+  ModalController,
+  ViewDidEnter
 } from '@ionic/angular/standalone';
 import { ReactiveFormsModule } from '@angular/forms';
 import { addIcons } from 'ionicons';
@@ -40,6 +41,9 @@ import CategoryModalComponent from '../../../category/component/category-modal/c
 import ExpenseModalComponent from '../../component/expense-modal/expense-modal.component';
 import { CategoryService } from '../../../category/service/category.service';
 import { ToastService } from '../../../shared/service/toast.service';
+import { ExpenseService } from '../../service/expense.service';
+import { Expense, ExpenseCriteria, SortOption } from '../../../shared/domain';
+import { finalize } from 'rxjs';
 
 @Component({
   selector: 'app-expense-list',
@@ -81,15 +85,24 @@ import { ToastService } from '../../../shared/service/toast.service';
     IonButton
   ]
 })
-export default class ExpenseListComponent {
+export default class ExpenseListComponent implements ViewDidEnter {
   // DI
   private readonly modalCtrl = inject(ModalController);
   private readonly categoryService = inject(CategoryService);
   private readonly toastService = inject(ToastService);
+  private readonly ExpenseService = inject(ExpenseService);
+  date = set(new Date(), { date: 1 });
 
   @Input() category: Category = {} as Category;
   categories: Category[] = [];
-  date = set(new Date(), { date: 1 });
+
+  @Input() expense: Expense = {} as Expense;
+  expenses: Expense[] | null = null;
+
+  readonly initialSort = 'name,asc';
+  lastPageReached = false;
+  loading = false;
+  searchCriteria: ExpenseCriteria = { page: 0, size: 25, sort: this.initialSort };
 
   constructor() {
     // Add all used Ionic icons
@@ -113,6 +126,7 @@ export default class ExpenseListComponent {
 
   ionViewDidEnter(): void {
     this.loadAllCategories();
+    this.loadExpenses();
   }
 
   private loadAllCategories(): void {
@@ -130,5 +144,25 @@ export default class ExpenseListComponent {
     modal.present();
     const { role } = await modal.onWillDismiss();
     // if (role === 'refresh') this.reloadCategories();
+  }
+
+  private loadExpenses(next?: () => void): void {
+    if (!this.searchCriteria.name) delete this.searchCriteria.name;
+    this.loading = true;
+    this.ExpenseService.getAllExpenses(this.searchCriteria)
+      .pipe(
+        finalize(() => {
+          this.loading = false;
+          if (next) next();
+        })
+      )
+      .subscribe({
+        next: expense => {
+          if (this.searchCriteria.page === 0 || !this.expenses) this.expenses = [];
+          /*this.expenses.push(...expense.content);
+          this.lastPageReached = expense.last;*/
+        },
+        error: error => this.toastService.displayWarningToast('Could not load expenses', error)
+      });
   }
 }

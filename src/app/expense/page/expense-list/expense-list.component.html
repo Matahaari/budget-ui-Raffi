@@ -49,7 +49,7 @@
     <!-- Kategorien Anzeigen-->
     <ion-row>
       <ion-col>
-        @switch (categories?.length) {
+        @switch (expenses?.length) {
           <!-- Skeleton -->
           @case (null) {
             @for (i of [0, 1, 2, 3, 4, 5, 6, 7, 8, 9]; track i) {
@@ -71,7 +71,7 @@
 
           <!-- Categories -->
           @default {
-            @for (category of categories; track category.id) {
+            @for (category of expenses; track category.id) {
               <ion-item button="true" [detail]="true" (click)="openModal(category)">
                 <ion-label> {{ category.name }}</ion-label>
               </ion-item>
@@ -96,13 +96,13 @@
 <ion-footer role="contentinfo" class="md footer-md footer-toolbar-padding">
   <ion-toolbar class="toolbar-title-default md in-toolbar">
     <ion-buttons slot="start">
-      <ion-button  (click)="addMonths(+1)">
+      <ion-button  (click)="addMonths(-1)">
         <ion-icon slot="icon-only" name="arrow-back" class="sc-ion-buttons-md md flip-rtl" role="img"></ion-icon>
       </ion-button>
     </ion-buttons>
     <ion-title>{{ date | date: "MMMM yyyy" }}</ion-title>
     <ion-buttons slot="end">
-      <ion-button  (click)="addMonths(-1)">
+      <ion-button  (click)="addMonths(+1)">
         <ion-icon slot="icon-only" name="arrow-forward"></ion-icon>
       </ion-button>
     </ion-buttons>
