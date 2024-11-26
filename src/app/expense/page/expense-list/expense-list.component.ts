@@ -1,4 +1,4 @@
-import { Component, inject, Input } from '@angular/core';
+import { Component, inject } from '@angular/core';
 import { addMonths, set } from 'date-fns';
 import {
   IonButton,
@@ -36,13 +36,11 @@ import { NonNullableFormBuilder, ReactiveFormsModule } from '@angular/forms';
 import { addIcons } from 'ionicons';
 import { add, alertCircleOutline, arrowBack, arrowForward, pricetag, search, swapVertical } from 'ionicons/icons';
 import { CurrencyPipe, DatePipe } from '@angular/common';
-import { Category } from '../../../shared/domain';
-import CategoryModalComponent from '../../../category/component/category-modal/category-modal.component';
+import { Category, Expense, ExpenseCriteria } from '../../../shared/domain';
 import ExpenseModalComponent from '../../component/expense-modal/expense-modal.component';
 import { CategoryService } from '../../../category/service/category.service';
 import { ToastService } from '../../../shared/service/toast.service';
 import { ExpenseService } from '../../service/expense.service';
-import { Expense, ExpenseCriteria, SortOption } from '../../../shared/domain';
 import { debounce, finalize, from, groupBy, interval, mergeMap, Subscription, toArray } from 'rxjs';
 import { formatPeriod } from '../../../shared/period';
 import { InfiniteScrollCustomEvent, RefresherCustomEvent } from '@ionic/angular';
