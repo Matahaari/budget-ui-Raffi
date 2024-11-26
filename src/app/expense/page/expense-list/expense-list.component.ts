@@ -45,6 +45,7 @@ import { ExpenseService } from '../../service/expense.service';
 import { Expense, ExpenseCriteria, SortOption } from '../../../shared/domain';
 import { debounce, finalize, from, groupBy, interval, mergeMap, Subscription, toArray } from 'rxjs';
 import { formatPeriod } from '../../../shared/period';
+import { RefresherCustomEvent } from '@ionic/angular';
 
 interface ExpenseGroup {
   date: string;
@@ -126,8 +127,13 @@ export default class ExpenseListComponent implements ViewDidEnter {
       componentProps: { category: category ?? {} }
     });
     modal.present();
-    /*const { role } = await modal.onWillDismiss();
-    if (role === 'refresh') this.reloadCategories();*/
+    const { role } = await modal.onWillDismiss();
+    if (role === 'refresh') this.reloadExpenses();
+  }
+
+  reloadExpenses($event?: RefresherCustomEvent): void {
+    this.searchCriteria.page = 0;
+    this.loadExpenses(() => $event?.target.complete());
   }
 
   ionViewDidEnter(): void {
