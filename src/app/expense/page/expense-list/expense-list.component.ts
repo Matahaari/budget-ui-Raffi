@@ -97,7 +97,7 @@ export default class ExpenseListComponent implements ViewDidEnter {
   readonly searchForm = this.formBuilder.group({ name: [''], sort: [this.initialSort] });
   date = set(new Date(), { date: 1 });
   categories: Category[] = [];
-  expenses: Expense[] = [];
+  expenses: Expense[] | null = null;
 
   lastPageReached = false;
   loading = false;
@@ -154,7 +154,7 @@ export default class ExpenseListComponent implements ViewDidEnter {
   private loadExpenses(next?: () => void): void {
     if (!this.searchCriteria.name) delete this.searchCriteria.name;
     this.loading = true;
-    this.ExpenseService.getAllExpenses(this.searchCriteria)
+    this.ExpenseService.getExpenses(this.searchCriteria)
       .pipe(
         finalize(() => {
           this.loading = false;
@@ -162,10 +162,10 @@ export default class ExpenseListComponent implements ViewDidEnter {
         })
       )
       .subscribe({
-        next: expense => {
+        next: expenses => {
           if (this.searchCriteria.page === 0 || !this.expenses) this.expenses = [];
-          this.expenses.push(...expense.values());
-          // this.lastPageReached = expense.sort();
+          this.expenses.push(...expenses.content);
+          this.lastPageReached = expenses.last;
         },
         error: error => this.toastService.displayWarningToast('Could not load expenses', error)
       });
