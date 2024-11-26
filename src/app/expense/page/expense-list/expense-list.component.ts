@@ -43,7 +43,13 @@ import { CategoryService } from '../../../category/service/category.service';
 import { ToastService } from '../../../shared/service/toast.service';
 import { ExpenseService } from '../../service/expense.service';
 import { Expense, ExpenseCriteria, SortOption } from '../../../shared/domain';
-import { debounce, finalize, interval, Subscription } from 'rxjs';
+import { debounce, finalize, from, groupBy, interval, mergeMap, Subscription, toArray } from 'rxjs';
+import { formatPeriod } from '../../../shared/period';
+
+interface ExpenseGroup {
+  date: string;
+  expenses: Expense[];
+}
 
 @Component({
   selector: 'app-expense-list',
@@ -87,6 +93,7 @@ import { debounce, finalize, interval, Subscription } from 'rxjs';
 })
 export default class ExpenseListComponent implements ViewDidEnter {
   // DI
+
   private readonly modalCtrl = inject(ModalController);
   private readonly categoryService = inject(CategoryService);
   private readonly toastService = inject(ToastService);
@@ -100,7 +107,8 @@ export default class ExpenseListComponent implements ViewDidEnter {
   expenses: Expense[] | null = null;
   lastPageReached = false;
   loading = false;
-  searchCriteria: ExpenseCriteria = { page: 0, size: 25, sort: this.initialSort };
+  searchCriteria: ExpenseCriteria = { yearMonth: '', name: '', page: 0, size: 25, sort: this.initialSort };
+  expenseGroups: ExpenseGroup[] | null = null;
 
   constructor() {
     // Add all used Ionic icons
@@ -150,23 +158,37 @@ export default class ExpenseListComponent implements ViewDidEnter {
     // if (role === 'refresh') this.reloadCategories();
   }
 
-  private loadExpenses(next?: () => void): void {
+  private loadExpenses(next: () => void = () => {}): void {
+    this.searchCriteria.yearMonth = formatPeriod(this.date);
+    if (!this.searchCriteria.categoryIds?.length) delete this.searchCriteria.categoryIds;
     if (!this.searchCriteria.name) delete this.searchCriteria.name;
     this.loading = true;
+    const groupByDate = this.searchCriteria.sort.startsWith('date');
     this.ExpenseService.getExpenses(this.searchCriteria)
       .pipe(
-        finalize(() => {
-          this.loading = false;
-          if (next) next();
+        finalize(() => (this.loading = false)),
+        mergeMap(expensePage => {
+          this.lastPageReached = expensePage.last;
+          next();
+          if (this.searchCriteria.page === 0 || !this.expenseGroups) this.expenseGroups = [];
+          return from(expensePage.content).pipe(
+            groupBy(expense => (groupByDate ? expense.date : expense.id)),
+            mergeMap(group => group.pipe(toArray()))
+          );
         })
       )
       .subscribe({
-        next: expenses => {
-          if (this.searchCriteria.page === 0 || !this.expenses) this.expenses = [];
-          this.expenses.push(...expenses.content);
-          this.lastPageReached = expenses.last;
+        next: (expenses: Expense[]) => {
+          const expenseGroup: ExpenseGroup = {
+            date: expenses[0].date,
+            expenses: this.sortExpenses(expenses)
+          };
+          const expenseGroupWithSameDate = this.expenseGroups!.find(other => other.date === expenseGroup.date);
+          if (!expenseGroupWithSameDate || !groupByDate) this.expenseGroups!.push(expenseGroup);
+          else expenseGroupWithSameDate.expenses = this.sortExpenses([...expenseGroupWithSameDate.expenses, ...expenseGroup.expenses]);
         },
         error: error => this.toastService.displayWarningToast('Could not load expenses', error)
       });
   }
+  private sortExpenses = (expenses: Expense[]): Expense[] => expenses.sort((a, b) => a.name.localeCompare(b.name));
 }
