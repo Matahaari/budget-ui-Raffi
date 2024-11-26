@@ -32,9 +32,11 @@ import { CategoryService } from '../../../category/service/category.service';
 import { LoadingIndicatorService } from '../../../shared/service/loading-indicator.service';
 import { ToastService } from '../../../shared/service/toast.service';
 import { formatISO, parseISO } from 'date-fns';
-import { Category, ExpenseUpsertDto } from '../../../shared/domain';
-import { finalize } from 'rxjs';
+import { Category, Expense, ExpenseUpsertDto } from '../../../shared/domain';
+import { finalize, from, groupBy, mergeMap, toArray } from 'rxjs';
 import { ExpenseService } from '../../service/expense.service';
+import { RefresherCustomEvent } from '@ionic/angular';
+import { formatPeriod } from '../../../shared/period';
 
 @Component({
   selector: 'app-expense-modal',
@@ -147,6 +149,6 @@ export default class ExpenseModalComponent {
     });
     modal.present();
     const { role } = await modal.onWillDismiss();
-    // if (role === 'refresh') this.reloadCategories();
+    // if (role === 'refresh') this.reloadExpenses();
   }
 }
