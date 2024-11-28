@@ -128,10 +128,10 @@ export default class ExpenseListComponent implements ViewDidEnter, ViewDidLeave 
   };
 
   //Funktion um Modal anzuzeigen. Aufruf durch + Button
-  async openexpenseModal(category?: Category): Promise<void> {
+  async openexpenseModal(expense?: Expense): Promise<void> {
     const modal = await this.modalCtrl.create({
       component: ExpenseModalComponent,
-      componentProps: { category: category ?? {} }
+      componentProps: { expense: expense ?? {} }
     });
     modal.present();
     const { role } = await modal.onWillDismiss();
