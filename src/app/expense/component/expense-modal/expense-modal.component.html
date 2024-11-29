@@ -39,7 +39,7 @@
   <!-- Category -->
   <ion-item>
     <ion-icon name="pricetag" slot="start" role="img" class="md"></ion-icon>
-    <ion-select placeholder="Category" interface="popover" formControlName="categoryId" >
+    <ion-select placeholder="Category" interface="popover" formControlName="categoryId">
       @for (category of categories; track category.id) {
         <ion-select-option [value]="category.id">
           {{ category.name }}
@@ -92,8 +92,9 @@
   </ion-item>
 
   <!-- Delete Button -->
-  <ion-fab slot="fixed" vertical="bottom" horizontal="end" >
-    <ion-fab-button  (click)="delete()" color="danger">
+
+  <ion-fab slot="fixed" vertical="bottom" horizontal="end" *ngIf="expense.name">
+    <ion-fab-button (click)="delete()" color="danger">
       <ion-icon name="trash" />
     </ion-fab-button>
   </ion-fab>

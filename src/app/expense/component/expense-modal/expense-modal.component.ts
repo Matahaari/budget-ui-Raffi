@@ -40,6 +40,7 @@ import { ExpenseService } from '../../service/expense.service';
 import { RefresherCustomEvent } from '@ionic/angular';
 import { formatPeriod } from '../../../shared/period';
 import { ActionSheetService } from '../../../shared/service/action-sheet.service';
+import { CommonModule } from '@angular/common';
 
 @Component({
   selector: 'app-expense-modal',
@@ -70,7 +71,8 @@ import { ActionSheetService } from '../../../shared/service/action-sheet.service
     IonFab,
     IonFabButton,
     IonSkeletonText,
-    IonRadioGroup
+    IonRadioGroup,
+    CommonModule
   ]
 })
 export default class ExpenseModalComponent implements ViewWillEnter, ViewDidEnter {
@@ -155,6 +157,7 @@ export default class ExpenseModalComponent implements ViewWillEnter, ViewDidEnte
 
   ionViewWillEnter(): void {
     const { id, amount, category, date, name } = this.expense;
+    console.log('Expense ID:', id);
     this.expenseForm.patchValue({ id, amount, categoryId: category?.id, date, name });
     this.loadAllCategories();
     if (category) this.categories.push(category);
