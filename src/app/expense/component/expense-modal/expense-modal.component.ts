@@ -22,7 +22,9 @@ import {
   IonSkeletonText,
   IonTitle,
   IonToolbar,
-  ModalController
+  ModalController,
+  ViewDidEnter,
+  ViewWillEnter
 } from '@ionic/angular/standalone';
 import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { addIcons } from 'ionicons';
@@ -37,6 +39,7 @@ import { finalize, from, groupBy, mergeMap, toArray } from 'rxjs';
 import { ExpenseService } from '../../service/expense.service';
 import { RefresherCustomEvent } from '@ionic/angular';
 import { formatPeriod } from '../../../shared/period';
+import { ActionSheetService } from '../../../shared/service/action-sheet.service';
 
 @Component({
   selector: 'app-expense-modal',
@@ -70,7 +73,7 @@ import { formatPeriod } from '../../../shared/period';
     IonRadioGroup
   ]
 })
-export default class ExpenseModalComponent {
+export default class ExpenseModalComponent implements ViewWillEnter, ViewDidEnter {
   // DI
   private readonly modalCtrl = inject(ModalController);
   private readonly categoryService = inject(CategoryService);
@@ -78,8 +81,10 @@ export default class ExpenseModalComponent {
   private readonly formBuilder = inject(FormBuilder);
   private readonly loadingIndicatorService = inject(LoadingIndicatorService);
   private readonly toastService = inject(ToastService);
+  private readonly actionSheetService = inject(ActionSheetService);
   @Input() category: Category = {} as Category;
   categories: Category[] = [];
+  @Input() expense: Expense = {} as Expense;
 
   readonly expenseForm = this.formBuilder.group({
     amount: [0, [Validators.min(0.1), Validators.required]],
@@ -121,7 +126,20 @@ export default class ExpenseModalComponent {
   }
 
   delete(): void {
-    this.modalCtrl.dismiss(null, 'delete');
+    this.actionSheetService
+      .showDeletionConfirmation('Are you sure you want to delete this expense?')
+      .pipe(mergeMap(() => this.loadingIndicatorService.showLoadingIndicator({ message: 'Deleting expense' })))
+      .subscribe(loadingIndicator => {
+        this.ExpenseService.deleteExpense(this.expense.id!)
+          .pipe(finalize(() => loadingIndicator.dismiss()))
+          .subscribe({
+            next: () => {
+              this.toastService.displaySuccessToast('Expense deleted');
+              this.modalCtrl.dismiss(null, 'refresh');
+            },
+            error: error => this.toastService.displayWarningToast('Could not delete expense', error)
+          });
+      });
   }
 
   async showCategoryModal(): Promise<void> {
@@ -135,11 +153,17 @@ export default class ExpenseModalComponent {
     this.loadAllCategories();
   }
 
+  ionViewWillEnter(): void {
+    this.loadAllCategories();
+    this.expenseForm.patchValue(this.expense);
+  }
+
   private loadAllCategories(): void {
     this.categoryService.getAllCategories({ sort: 'name,asc' }).subscribe({
       next: categories => (this.categories = categories),
       error: error => this.toastService.displayErrorToast('Could not load categories', error)
     });
+    console.log(this.category);
   }
 
   async opencatModal(category?: Category): Promise<void> {

@@ -1,4 +1,4 @@
-import { Component, inject } from '@angular/core';
+import { Component, inject, Input } from '@angular/core';
 import { addMonths, set } from 'date-fns';
 import {
   IonButton,
@@ -116,6 +116,7 @@ export default class ExpenseListComponent implements ViewDidEnter, ViewDidLeave 
   loading = false;
   searchCriteria: ExpenseCriteria = { page: 0, size: 25, sort: this.initialSort };
   expenseGroups: ExpenseGroup[] | null = null;
+  @Input() expense: Expense = {} as Expense;
 
   constructor() {
     // Add all used Ionic icons
