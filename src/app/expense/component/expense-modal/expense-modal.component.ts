@@ -154,8 +154,10 @@ export default class ExpenseModalComponent implements ViewWillEnter, ViewDidEnte
   }
 
   ionViewWillEnter(): void {
+    const { id, amount, category, date, name } = this.expense;
+    this.expenseForm.patchValue({ id, amount, categoryId: category?.id, date, name });
     this.loadAllCategories();
-    this.expenseForm.patchValue(this.expense);
+    if (category) this.categories.push(category);
   }
 
   private loadAllCategories(): void {
@@ -163,7 +165,6 @@ export default class ExpenseModalComponent implements ViewWillEnter, ViewDidEnte
       next: categories => (this.categories = categories),
       error: error => this.toastService.displayErrorToast('Could not load categories', error)
     });
-    console.log(this.category);
   }
 
   async opencatModal(category?: Category): Promise<void> {
