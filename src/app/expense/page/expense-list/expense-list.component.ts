@@ -100,11 +100,11 @@ export default class ExpenseListComponent implements ViewDidEnter, ViewDidLeave 
   private readonly ExpenseService = inject(ExpenseService);
   private searchFormSubscription?: Subscription;
   private readonly formBuilder = inject(NonNullableFormBuilder);
-  readonly initialSort = 'date, asc';
+  readonly initialSort = 'date, desc';
   readonly searchForm = this.formBuilder.group({ name: [''], sort: [this.initialSort] });
   readonly sortOptions: SortOption[] = [
-    { label: 'Date (Newest)', value: 'date,asc' },
-    { label: 'Date (oldest)', value: 'date,desc' },
+    { label: 'Date (Newest)', value: 'date,desc' },
+    { label: 'Date (oldest)', value: 'date,asc' },
     { label: 'Created at (newest first)', value: 'createdAt,desc' },
     { label: 'Created at (oldest first)', value: 'createdAt,asc' },
     { label: 'Name (A-Z)', value: 'name,asc' },
